@@ -29,8 +29,8 @@ public class ContarPrimos {
         long endTime = System.currentTimeMillis() - startTime;
         double segundosParalelismo = (double) endTime / 1000;
         System.out.println("Terminando en " + segundosParalelismo + " segundo");
-        long speedup = (long) ((double) segundosParalelismo / NTHREDS);
-        System.out.println("Speed-Up: "+speedup);
+        double speedup = ((double) segundosParalelismo / NTHREDS);
+        System.out.println("Speed-Up: "+speedup+" segundos por tarea");
     }
 
     static void esPrimo(double numero) {
