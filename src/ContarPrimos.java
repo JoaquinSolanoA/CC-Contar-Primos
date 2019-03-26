@@ -21,7 +21,7 @@ public class ContarPrimos {
 
         ExecutorService service = Executors.newFixedThreadPool(NTHREDS);
 
-        for (double i = 2; i <= 50000000; i++) {
+        for (double i = 2; i <= 100000000; i++) {
             service.submit(new Primos(i));
         }
         service.shutdown();
