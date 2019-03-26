@@ -1,44 +1,70 @@
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
+/**
+ * 
+ * @author Joaquín Solano
+ *
+ */
 public class ContarPrimos {
-    private static final int NTHREDS = Runtime.getRuntime().availableProcessors();
-
+	/**
+	 * Constante de la cantidad maxima de hilos
+	 */
+    private static final int NTHREDS = 16;
+    /**
+     * Constante de la cantidad maximo de primos
+     */
+    private static final int MAXPRIMOS = 600 * 1000;
+    /**
+     * Main del programa
+     * @param args
+     */
     public static void main(String[] args) {
 
-    	/*Metodo con proceso lineal
-        System.out.println("Empezando proceso Lineal");
-        long startTime = System.currentTimeMillis();
-        for (double i = 2; i <= 1000000; i++) {
-            esPrimo(i);
-        }
-        long endTime = System.currentTimeMillis() - startTime;
-        double segundosLineal = (double) endTime / 1000;
-        System.out.println("Terminando en " + segundosLineal + " segundo");
-    	 */
-        System.out.println("Empezando proceso Paralelismo");
-        long startTime = System.currentTimeMillis();
-
-        ExecutorService service = Executors.newFixedThreadPool(NTHREDS);
-
-        for (double i = 2; i <= 100000000; i++) {
-            service.submit(new Primos(i));
-        }
-        service.shutdown();
-
-        long endTime = System.currentTimeMillis() - startTime;
-        double segundosParalelismo = (double) endTime / 1000;
-        System.out.println("Terminando en " + segundosParalelismo + " segundo");
-        double speedup = ((double) segundosParalelismo / NTHREDS);
-        System.out.println("Speed-Up: "+speedup+" segundos por tarea");
+    	// Ciclo for que recorrera los numeros limites que recorrera los hilos
+    	for (int numerosPrimos=(100*1000); numerosPrimos<=MAXPRIMOS; numerosPrimos+=(100*1000)) {
+    		
+    		double tiempoParalelismoT1 = 0;
+    		System.out.println("Cantidad limite: "+numerosPrimos);
+    		// Ciclo for que recorrera la cantidad de hilos usados en paralelismo
+    		for(int cantHilos=1; cantHilos<=NTHREDS; cantHilos++) {
+    			
+		        // Se mide el tiempo inicial del programa
+		        long startTime = System.currentTimeMillis();
+		        // Se define la cantidad de hilos a usar en el paralelismo
+		        ExecutorService service = Executors.newFixedThreadPool(cantHilos);
+		        // Ciclo for que entrega las tareas a los hilos por el limite dado
+		        for (double i = 2; i <= numerosPrimos; i++) {
+		        	// Se ejecuta la tarea de primos entregando el numero correspondiente
+		            service.submit(new Primos(i));
+		        }
+		        // Se termina el uso service
+		        service.shutdown();
+		        // Se mide el tiempo final y se resta con el tiempo inicial y se obtiene el tiempo
+		        long endTime = System.currentTimeMillis() - startTime;
+		        double tiempoParalelismo = (double) endTime;
+		        if (cantHilos==1) {
+		        	tiempoParalelismoT1 = tiempoParalelismo;
+		        }
+		        double speedup = ((double) tiempoParalelismoT1 / tiempoParalelismo);
+		        System.out.println("Hilos "+cantHilos+" Tiempo: " + tiempoParalelismo + " milisegundo Speed-Up: "+speedup+" segundos por hilos");
+	    	}
+    	}   
     }
-
+    /**
+     * Metodo que verificara si un numero ingresado es primo o no
+     * @param numero que se verificara
+     */
     static void esPrimo(double numero) {
-        int contador = 2;
+        // Numero inicial del divisor
+    	int contador = 2;
+    	// Booleano que termina el ciclo cuando el numero sea divisible
         boolean primo = true;
+        // Ciclo while que pregunta si el numero fue dividido o se llego el divisor maximo
         while ((primo) && (contador != numero)) {
-            if (numero % contador == 0)
-                primo = false;
+        	// Condicion if si el modulo  numero con el contador es 0
+            if (numero % contador == 0) {
+            	primo = false;
+            }
             contador++;
         }
     }
