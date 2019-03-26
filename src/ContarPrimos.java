@@ -1,5 +1,6 @@
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 /**
  * 
  * @author Joaquín Solano
@@ -13,15 +14,20 @@ public class ContarPrimos {
     /**
      * Constante de la cantidad maximo de primos
      */
-    private static final int MAXPRIMOS = 600 * 1000;
+    private static final int MAXPRIME = 600000;
+    /**
+     * Constante de tiempo maximo de espera
+     */
+    private static final int MAXTIME = 120;
     /**
      * Main del programa
      * @param args
+     * @throws InterruptedException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
     	// Ciclo for que recorrera los numeros limites que recorrera los hilos
-    	for (int numerosPrimos=(100*1000); numerosPrimos<=MAXPRIMOS; numerosPrimos+=(100*1000)) {
+    	for (int numerosPrimos=(100*1000); numerosPrimos<=MAXPRIME; numerosPrimos+=(100*1000)) {
     		
     		double tiempoParalelismoT1 = 0;
     		System.out.println("Cantidad limite: "+numerosPrimos);
@@ -39,6 +45,8 @@ public class ContarPrimos {
 		        }
 		        // Se termina el uso service
 		        service.shutdown();
+		        // Funcion que espera a que los hilos terminen sus tareas
+		        service.awaitTermination(MAXTIME, TimeUnit.SECONDS);
 		        // Se mide el tiempo final y se resta con el tiempo inicial y se obtiene el tiempo
 		        long endTime = System.currentTimeMillis() - startTime;
 		        double tiempoParalelismo = (double) endTime;
