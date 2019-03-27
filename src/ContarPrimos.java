@@ -27,8 +27,8 @@ public class ContarPrimos {
     public static void main(String[] args) throws InterruptedException {
 
     	// Ciclo for que recorrera los numeros limites que recorrera los hilos
-    	for (int numerosPrimos=(100*1000); numerosPrimos<=MAXPRIME; numerosPrimos+=(100*1000)) {
-    		
+    	for (int numerosPrimos=(100000); numerosPrimos<=MAXPRIME; numerosPrimos+=(100000)) {
+    		// Variable que guarda el primer tiempo del hilo
     		double tiempoParalelismoT1 = 0;
     		System.out.println("Cantidad limite: "+numerosPrimos);
     		// Ciclo for que recorrera la cantidad de hilos usados en paralelismo
@@ -50,11 +50,13 @@ public class ContarPrimos {
 		        // Se mide el tiempo final y se resta con el tiempo inicial y se obtiene el tiempo
 		        long endTime = System.currentTimeMillis() - startTime;
 		        double tiempoParalelismo = (double) endTime;
+		        // Guarda el tiempo de la primera medida de tiempo
 		        if (cantHilos==1) {
 		        	tiempoParalelismoT1 = tiempoParalelismo;
 		        }
+		        // Se calcula el speed up del tiempo del primer hilo dividido al tiempo medido actual
 		        double speedup = ((double) tiempoParalelismoT1 / tiempoParalelismo);
-		        System.out.println("Hilos "+cantHilos+" Tiempo: " + tiempoParalelismo + " milisegundo Speed-Up: "+speedup+" segundos por hilos");
+		        System.out.println("Hilo "+cantHilos+" en tiempo: " + tiempoParalelismo + " milisegundo. Speed-Up: "+speedup);
 	    	}
     	}   
     }
